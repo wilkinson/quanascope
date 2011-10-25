@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+    index.html ~~
+                                                        ~~ (c) SRW, 25 Oct 2011
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="author" content="Sean Wilkinson"/>
+    <title>Quanascope: Image Analysis in the Cloud</title>
+    <style>
+        body {
+            background: #CCCCCC;
+            text-align: center;
+        }
+        #holder {
+            border: 5px dashed black;
+            margin: 20px auto;
+        }
+        #holder.hover {
+            border: 5px dashed red;
+        }
+    </style>
+    <link rel="shortcut icon" href="favicon.ico"/>
+  </head>
+  <body>
+    <noscript>This page requires JavaScript.</noscript>
+    <h1>Quanascope</h1>
+    <canvas width="300" height="300" id="holder"></canvas>
+    <br/>
+    <input type="button" value="Run" onClick="NUKE.demo();"/>
+    <script src="main.js"></script>
+  </body>
+<html>
