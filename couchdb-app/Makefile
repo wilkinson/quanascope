@@ -10,6 +10,13 @@
 
 SHELL   :=  sh
 
+APP         :=  quanascope
+#URL         :=  http://sean.couchone.com/apps/_design/quanascope/index.html
+#DB          :=  sean.couchone.com:5984/apps
+URL         :=  http://localhost:5984/apps/_design/quanascope/index.html
+DB          :=  localhost:5984/apps
+APPRC       :=  $(APP)/.couchapprc
+
 define gray-printf
     printf '\033[1;30m'$(strip $(1))'\033[1;0m' $(strip $(2))
 endef
@@ -61,11 +68,6 @@ define contingent
         contingent $(1)                                                     \
     )
 endef
-
-APP         :=  quanascope
-URL         :=  http://sean.couchone.com/apps/_design/quanascope/index.html
-DB          :=  sean.couchone.com:5984/apps
-APPRC       :=  $(APP)/.couchapprc
 
 COUCHAPP    :=  $(call contingent, couchapp)
 CP          :=  $(call contingent, rsync) --archive

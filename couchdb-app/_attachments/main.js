@@ -49,9 +49,18 @@ if (!NUKE) {
         reader.onload = function (evt) {
             var img = new Image();
             img.onload = function () {
-                canvas.height = img.height;
-                canvas.width = img.width;
-                ctx.drawImage(img, 0, 0);
+                var k, x, y;
+                k = img.width / img.height;
+                if (img.width < img.height) {
+                    x = 300 / k;
+                    y = 300;
+                } else {
+                    x = 300;
+                    y = 300 / k;
+                }
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, x, y);
+                console.log(canvas.width, canvas.height);
                 setTimeout(NUKE.demo, 0);
             };
             img.src = evt.target.result;
