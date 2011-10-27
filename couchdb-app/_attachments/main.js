@@ -20,6 +20,82 @@ if (!NUKE) {
 
     canvas = document.getElementById('holder');
 
+    canvas.onclick = function (evt) {
+
+        var data, distance, pixel, x, y;
+
+        distance = function (pixel, data) {
+            var dr2, dg2, db2, da2, i, j, m, n, pow, sqrt, y;
+            m = data.rows;
+            n = data.cols;
+            pow = Math.pow;
+            sqrt = Math.sqrt;
+            y = new Array(m);
+            for (i = 0; i < m; i += 1) {
+                y[i] = new Array(n);
+                for (j = 0; j < n; j += 1) {
+                    dr2 = pow(data.red[i][j] - pixel.data[0], 2);
+                    dg2 = pow(data.green[i][j] - pixel.data[1], 2);
+                    db2 = pow(data.blue[i][j] - pixel.data[2], 2);
+                    da2 = pow(data.alpha[i][j] - pixel.data[3], 2);
+                    y[i][j] = sqrt(dr2 + dg2 + db2 + da2);
+                }
+            }
+            return y;
+        };
+
+        if (evt.pageX || evt.pageY) {
+            x = evt.pageX;
+            y = evt.pageY;
+        } else {
+            x = e.clientX +
+                document.body.scrollLeft +
+                document.documentElement.scrollLeft;
+            y = e.clientY +
+                document.body.scrollTop +
+                document.documentElement.scrollTop;
+        }
+
+        x = x - canvas.offsetLeft - 1;
+        y = y - canvas.offsetTop - 1;
+        pixel = ctx.getImageData(x, y, 1, 1);
+        data = NUKE.snapshot(canvas);
+
+        (function () {
+         // Experiment ...
+
+            var disguise, k, i, j, m, min, n, temp, x;
+
+            x = distance(pixel, data);
+            console.log('Done.');
+
+            m = x.length;
+            n = x[0].length;
+
+            k = 0;
+            for (i = 0; i < m; i += 1) {
+                for (j = 0; j < n; j += 1) {
+                    k = Math.max(k, x[i][j]);
+                }
+            }
+
+            disguise = ctx.getImageData(0, 0, 1, 1);
+
+            for (i = 0; i < m; i += 1) {
+                for (j = 0; j < n; j += 1) {
+                    temp = parseInt(255 * x[i][j] / k);
+                    disguise.data[0] = temp;
+                    disguise.data[1] = temp;
+                    disguise.data[2] = temp;
+                    disguise.data[3] = 255;
+                    ctx.putImageData(disguise, j, i);
+                }
+            }
+
+        }());
+
+    };
+
     canvas.ondragleave = function () {
         canvas.className = '';
         return false;                   //- prevents default event handling?
@@ -76,10 +152,11 @@ if (!NUKE) {
  // Public definitions (as methods of a global variable)
 
     NUKE.demo = function () {
+
         var avg, data;
 
         avg = function (x) {
-         // This actually allows for "sparse" arrays with missing values.
+         // This computes a mean for "sparse arrays" with missing values.
             var i, j, n, total;
             n = 0;
             total = 0;
@@ -126,7 +203,9 @@ if (!NUKE) {
             red:    new Array(rows),
             green:  new Array(rows),
             blue:   new Array(rows),
-            alpha:  new Array(rows)
+            alpha:  new Array(rows),
+            rows:   rows,
+            cols:   cols
         };
 
         for (i = 0; i < rows; i += 1) {
