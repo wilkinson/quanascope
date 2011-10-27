@@ -14,7 +14,7 @@ if (!NUKE) {
 
  // Private declarations
 
-    var canvas, ctx;
+    var canvas, ctx, data;
 
  // Private definitions
 
@@ -22,7 +22,7 @@ if (!NUKE) {
 
     canvas.onclick = function (evt) {
 
-        var data, distance, pixel, x, y;
+        var distance, pixel, x, y;
 
         distance = function (pixel, data) {
             var dr2, dg2, db2, da2, i, j, m, n, pow, sqrt, y;
@@ -59,15 +59,13 @@ if (!NUKE) {
         x = x - canvas.offsetLeft - 1;
         y = y - canvas.offsetTop - 1;
         pixel = ctx.getImageData(x, y, 1, 1);
-        data = NUKE.snapshot(canvas);
 
         (function () {
          // Experiment ...
 
-            var disguise, k, i, j, m, min, n, temp, x;
+            var disguise, k, i, j, m, min, n, offset, temp, x;
 
             x = distance(pixel, data);
-            console.log('Done.');
 
             m = x.length;
             n = x[0].length;
@@ -79,18 +77,20 @@ if (!NUKE) {
                 }
             }
 
-            disguise = ctx.getImageData(0, 0, 1, 1);
+            disguise = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
             for (i = 0; i < m; i += 1) {
                 for (j = 0; j < n; j += 1) {
                     temp = parseInt(255 * x[i][j] / k);
-                    disguise.data[0] = temp;
-                    disguise.data[1] = temp;
-                    disguise.data[2] = temp;
-                    disguise.data[3] = 255;
-                    ctx.putImageData(disguise, j, i);
+                    offset = (i * n + j) * 4;
+                    disguise.data[offset] = temp;
+                    disguise.data[offset + 1] = temp;
+                    disguise.data[offset + 2] = temp;
+                    disguise.data[offset + 3] = 255;
                 }
             }
+
+            ctx.putImageData(disguise, 0, 0);
 
         }());
 
@@ -128,7 +128,7 @@ if (!NUKE) {
                 canvas.height = img.height;
                 canvas.width = img.width;
                 ctx.drawImage(img, 0, 0);
-                setTimeout(NUKE.demo, 0);
+                data = NUKE.snapshot(canvas);
             };
             img.src = evt.target.result;
         };
@@ -153,7 +153,7 @@ if (!NUKE) {
 
     NUKE.demo = function () {
 
-        var avg, data;
+        var avg;
 
         avg = function (x) {
          // This computes a mean for "sparse arrays" with missing values.
@@ -170,8 +170,6 @@ if (!NUKE) {
         };
 
         console.log('Reading current image ...');
-
-        data = NUKE.snapshot(canvas);
 
         console.log('Computing average values for each channel ...');
         console.log('  Red:  ', avg(data.red));
