@@ -86,7 +86,7 @@ if (!NUKE) {
                     disguise.data[offset] = temp;
                     disguise.data[offset + 1] = temp;
                     disguise.data[offset + 2] = temp;
-                    disguise.data[offset + 3] = 255;
+                    disguise.data[offset + 3] = temp;
                 }
             }
 
@@ -129,6 +129,7 @@ if (!NUKE) {
                 canvas.width = img.width;
                 ctx.drawImage(img, 0, 0);
                 data = NUKE.snapshot(canvas);
+                canvas.style.background = 'url(' + img.src + ')';
             };
             img.src = evt.target.result;
         };
@@ -150,6 +151,10 @@ if (!NUKE) {
     ctx.fillText('Drag image here :-)', canvas.width / 2, canvas.height / 2);
 
  // Public definitions (as methods of a global variable)
+
+    NUKE.clear = function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
 
     NUKE.demo = function () {
 
