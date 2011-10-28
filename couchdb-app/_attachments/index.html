@@ -85,7 +85,8 @@
     <h1>Quanascope</h1>
     <canvas width="300" height="300" id="holder"></canvas>
     <br/>
-    <input type="button" value="Clear" onClick="NUKE.clear();"/>
+    <input id="slider_a" type="range" value="50" min="0" max="100"/>
+    <input type="button" value="Reset" onClick="QSCOPE.reset();"/>
     <div style="text-align: center;">
         Drag an image onto the canvas, then click on points of interest.
     </div>

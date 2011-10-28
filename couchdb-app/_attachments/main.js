@@ -3,10 +3,10 @@
 //- main.js ~~
 //                                                      ~~ (c) SRW, 25 Oct 2011
 
-var NUKE;
+var QSCOPE;
 
-if (!NUKE) {
-    NUKE = {};
+if (!QSCOPE) {
+    QSCOPE = {};
 }
 
 (function () {
@@ -14,7 +14,7 @@ if (!NUKE) {
 
  // Private declarations
 
-    var canvas, ctx, data;
+    var canvas, ctx, data, pixel, slider_a;
 
  // Private definitions
 
@@ -22,27 +22,7 @@ if (!NUKE) {
 
     canvas.onclick = function (evt) {
 
-        var distance, pixel, x, y;
-
-        distance = function (pixel, data) {
-            var dr2, dg2, db2, da2, i, j, m, n, pow, sqrt, y;
-            m = data.rows;
-            n = data.cols;
-            pow = Math.pow;
-            sqrt = Math.sqrt;
-            y = new Array(m);
-            for (i = 0; i < m; i += 1) {
-                y[i] = new Array(n);
-                for (j = 0; j < n; j += 1) {
-                    dr2 = pow(data.red[i][j] - pixel.data[0], 2);
-                    dg2 = pow(data.green[i][j] - pixel.data[1], 2);
-                    db2 = pow(data.blue[i][j] - pixel.data[2], 2);
-                    da2 = pow(data.alpha[i][j] - pixel.data[3], 2);
-                    y[i][j] = sqrt(dr2 + dg2 + db2 + da2);
-                }
-            }
-            return y;
-        };
+        var x, y;
 
         if (evt.pageX || evt.pageY) {
             x = evt.pageX;
@@ -60,39 +40,7 @@ if (!NUKE) {
         y = y - canvas.offsetTop - 1;
         pixel = ctx.getImageData(x, y, 1, 1);
 
-        (function () {
-         // Experiment ...
-
-            var disguise, k, i, j, m, min, n, offset, temp, x;
-
-            x = distance(pixel, data);
-
-            m = x.length;
-            n = x[0].length;
-
-            k = 0;
-            for (i = 0; i < m; i += 1) {
-                for (j = 0; j < n; j += 1) {
-                    k = Math.max(k, x[i][j]);
-                }
-            }
-
-            disguise = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-            for (i = 0; i < m; i += 1) {
-                for (j = 0; j < n; j += 1) {
-                    temp = parseInt(255 * x[i][j] / k);
-                    offset = (i * n + j) * 4;
-                    disguise.data[offset] = temp;
-                    disguise.data[offset + 1] = temp;
-                    disguise.data[offset + 2] = temp;
-                    disguise.data[offset + 3] = temp;
-                }
-            }
-
-            ctx.putImageData(disguise, 0, 0);
-
-        }());
+        QSCOPE.heatmap(pixel, data);
 
     };
 
@@ -128,7 +76,8 @@ if (!NUKE) {
                 canvas.height = img.height;
                 canvas.width = img.width;
                 ctx.drawImage(img, 0, 0);
-                data = NUKE.snapshot(canvas);
+                data = QSCOPE.snapshot(canvas);
+                pixel = ctx.getImageData(0, 0, 1, 1);
                 canvas.style.background = 'url(' + img.src + ')';
             };
             img.src = evt.target.result;
@@ -146,17 +95,75 @@ if (!NUKE) {
     ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = '16pt Georgia';
-    ctx.textAlign = 'center';
-    ctx.fillText('Drag image here :-)', canvas.width / 2, canvas.height / 2);
+    //ctx.font = '16pt Georgia';
+    //ctx.textAlign = 'center';
+    //ctx.fillText('Drag image here :-)', canvas.width / 2, canvas.height / 2);
+
+    slider_a = document.getElementById('slider_a');
+
+    slider_a.onchange = function () {
+        QSCOPE.heatmap(pixel, data);
+    };
 
  // Public definitions (as methods of a global variable)
 
-    NUKE.clear = function () {
+    QSCOPE.heatmap = function (pixel, data) {
+        var alpha, disguise, distance, i, j, m, max_dist, n, offset, temp,
+            temp_a, temp_rgb, x, y;
+        alpha = slider_a.value / 100;
+        distance = function (pixel, data) {
+            var dr2, dg2, db2, da2, i, j, m, n, pow, sqrt, y;
+            m = data.rows;
+            n = data.cols;
+            pow = Math.pow;
+            sqrt = Math.sqrt;
+            y = new Array(m);
+            for (i = 0; i < m; i += 1) {
+                y[i] = new Array(n);
+                for (j = 0; j < n; j += 1) {
+                    dr2 = pow(data.red[i][j] - pixel.data[0], 2);
+                    dg2 = pow(data.green[i][j] - pixel.data[1], 2);
+                    db2 = pow(data.blue[i][j] - pixel.data[2], 2);
+                    da2 = pow(data.alpha[i][j] - pixel.data[3], 2);
+                    y[i][j] = sqrt(dr2 + dg2 + db2 + da2);
+                }
+            }
+            return y;
+        };
+        x = distance(pixel, data);
+        m = x.length;
+        n = x[0].length;
+        max_dist = 0;
+        for (i = 0; i < m; i += 1) {
+            for (j = 0; j < n; j += 1) {
+                max_dist = (max_dist < x[i][j]) ? x[i][j] : max_dist;
+            }
+        }
+        disguise = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        y = disguise.data;
+        for (i = 0; i < m; i += 1) {
+            for (j = 0; j < n; j += 1) {
+                offset = (i * n + j) * 4;
+                temp = x[i][j] / max_dist;
+                if (temp < alpha) {
+                    temp_rgb = 255;
+                    temp_a   = 255;
+                } else {
+                    temp_rgb = parseInt(255 * temp);
+                    temp_a   = parseInt(255 * temp);
+                }
+                y[offset] = y[offset + 1] = y[offset + 2] = temp_rgb;
+                y[offset + 3] = temp_a;
+            }
+        }
+        ctx.putImageData(disguise, 0, 0);
+    };
+
+    QSCOPE.reset = function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
 
-    NUKE.demo = function () {
+    QSCOPE.demo = function () {
 
         var avg;
 
@@ -186,7 +193,7 @@ if (!NUKE) {
 
     };
 
-    NUKE.snapshot = function (canvas) {
+    QSCOPE.snapshot = function (canvas) {
 
      // This function reads the current content of a given canvas element and
      // returns an object that stores each pixel's value as an integer between
