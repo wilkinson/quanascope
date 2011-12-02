@@ -1,7 +1,7 @@
 //- JavaScript source code
 
 //- main.js ~~
-//                                                      ~~ (c) SRW, 25 Oct 2011
+//                                                      ~~ (c) SRW, 07 Nov 2011
 
 var QSCOPE;
 
