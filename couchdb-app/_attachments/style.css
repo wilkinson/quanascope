@@ -57,6 +57,22 @@ iframe {
     width: 100%;
 }
 
+input[type="range"] {
+    /* -webkit-appearance: slider-vertical; */
+}
+
+input[type="range"]:before {
+    color: #808080;
+    font-family: monospace;
+    margin-left: -1em;
+    position: absolute;
+}
+
+input[type="range"]:hover:before {
+ /* NOTE: I need to contemplate using :active vs. :hover ... */
+    color: black;
+}
+
 noscript {
     color: red;
     font-size: 200%;
@@ -82,10 +98,28 @@ textarea {
 }
 
 #holder.hover {
+ /* NOTE: This is not a true ":hover" pseudo-selector! */
     border: 1px solid black;
     -moz-box-shadow: 0px 0px 10px gray;
     -webkit-box-shadow: 0px 0px 10px gray;
     box-shadow: 0px 0px 10px gray;
+}
+
+#slider_r:before {
+    content: "R";
+}
+
+#slider_g:before {
+    content: "G";
+}
+
+#slider_b:before {
+    content: "B";
+}
+
+#slider_a:before {
+ /* This is the escape code for the "Greek small letter alpha" character. */
+    content: "\0003b1"; 
 }
 
 /*  vim:set syntax=css:  */

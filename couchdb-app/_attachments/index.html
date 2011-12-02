@@ -16,7 +16,17 @@
     <h1>Quanascope</h1>
     <canvas width="300" height="300" id="holder"></canvas>
     <br/>
-    <input id="slider_a" type="range" value="50" min="0" max="100"/>
+    <form>
+    <!-- <div style="display: inline-block; text-align: right;"> -->
+      <input id="slider_r" type="range" value="50" min="0" max="100"/>
+      <br/>
+      <input id="slider_g" type="range" value="50" min="0" max="100"/>
+      <br/>
+      <input id="slider_b" type="range" value="50" min="0" max="100"/>
+      <br/>
+      <input id="slider_a" type="range" value="50" min="0" max="100"/>
+      <br/>
+    </form>
     <input type="button" value="Reset" onClick="QSCOPE.reset();"/>
     <div style="text-align: center;">
         Drag an image onto the canvas, then click on points of interest.
