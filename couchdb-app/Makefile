@@ -10,12 +10,12 @@
 
 SHELL   :=  sh
 
-APP         :=  quanascope
-#URL         :=  http://sean.couchone.com/testing/_design/$(APP)/index.html
-#DB          :=  sean.couchone.com/testing
-URL         :=  http://sean.couchone.com/apps/_design/$(APP)/index.html
-DB          :=  sean.couchone.com:5984/apps
-APPRC       :=  $(APP)/.couchapprc
+APP     :=  quanascope
+#URL    :=  http://sean.couchone.com/testing/_design/$(APP)/index.html
+#DB     :=  sean.couchone.com/testing
+URL     :=  http://sean.couchone.com/apps/_design/$(APP)/index.html
+DB      :=  sean.couchone.com:5984/apps
+APPRC   :=  $(APP)/.couchapprc
 
 define gray-printf
     printf '\033[1;30m'$(strip $(1))'\033[1;0m' $(strip $(2))
@@ -105,6 +105,8 @@ run: $(APPRC) $(APP)
             $(CP) .couchappignore $(APP)/                               ;   \
             $(CP) couchapp.json $(APP)/                                 ;   \
             $(CP) rewrites.json $(APP)/                                 ;   \
+            $(CP) validate_doc_update.js $(APP)/                        ;   \
+            echo "# $${RANDOM}" >> $(APP)/_attachments/cache.manifest   ;   \
             cd $(APP) && $(COUCHAPP) push -q                            ;   \
             if [ $$? -eq 0 ]; then                                          \
                 $(OPEN) $(URL)                                          ;   \

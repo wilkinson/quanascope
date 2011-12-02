@@ -1,0 +1,17 @@
+CACHE MANIFEST
+
+#-  cache.manifest ~~
+#                                                       ~~ (c) SRW, 02 Dec 2011
+
+CACHE:
+favicon.ico
+index.html
+main.js
+style.css
+
+NETWORK:
+*
+
+#FALLBACK:
+
+# EOF
