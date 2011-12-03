@@ -94,10 +94,13 @@ if (!QSCOPE) {
 
     ctx = canvas.getContext('2d');
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
     //ctx.font = '16pt Georgia';
     //ctx.textAlign = 'center';
     //ctx.fillText('Drag image here :-)', canvas.width / 2, canvas.height / 2);
+
+    ctx.fillStyle = "#CCCCCC";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     slider_a = document.getElementById('slider_a');
     slider_b = document.getElementById('slider_b');
@@ -156,7 +159,7 @@ if (!QSCOPE) {
         for (i = 0; i < m; i += 1) {
             for (j = 0; j < n; j += 1) {
                 offset = (i * n + j) * 4;
-                temp = x[i][j] / max_dist;
+                temp = 1 - (x[i][j] / max_dist);
                 if (temp < alpha) {
                     temp_r   = 255;
                     temp_g   = 255;
