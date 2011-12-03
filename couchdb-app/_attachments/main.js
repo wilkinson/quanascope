@@ -14,7 +14,7 @@ if (!QSCOPE) {
 
  // Private declarations
 
-    var canvas, ctx, data, pixel, slider_a;
+    var canvas, ctx, data, pixel, slider_a, slider_b, slider_g, slider_r;
 
  // Private definitions
 
@@ -100,17 +100,29 @@ if (!QSCOPE) {
     //ctx.fillText('Drag image here :-)', canvas.width / 2, canvas.height / 2);
 
     slider_a = document.getElementById('slider_a');
+    slider_b = document.getElementById('slider_b');
+    slider_g = document.getElementById('slider_g');
+    slider_r = document.getElementById('slider_r');
 
     slider_a.onchange = function () {
         QSCOPE.heatmap(pixel, data);
     };
 
+    slider_b.onchange = slider_a.onchange;
+    slider_g.onchange = slider_a.onchange;
+    slider_r.onchange = slider_a.onchange;
+
  // Public definitions (as methods of a global variable)
 
     QSCOPE.heatmap = function (pixel, data) {
         var alpha, disguise, distance, i, j, m, max_dist, n, offset, temp,
-            temp_a, temp_rgb, x, y;
+            temp_a, temp_r, temp_g, temp_b, x, y, red, green, blue;
+
+        red = slider_r.value / 100;
+        green = slider_g.value / 100;
+        blue = slider_b.value / 100;
         alpha = slider_a.value / 100;
+
         distance = function (pixel, data) {
             var dr2, dg2, db2, da2, i, j, m, n, pow, sqrt, y;
             m = data.rows;
@@ -146,13 +158,19 @@ if (!QSCOPE) {
                 offset = (i * n + j) * 4;
                 temp = x[i][j] / max_dist;
                 if (temp < alpha) {
-                    temp_rgb = 255;
+                    temp_r   = 255;
+                    temp_g   = 255;
+                    temp_b   = 255;
                     temp_a   = 255;
                 } else {
-                    temp_rgb = parseInt(255 * temp);
+                    temp_r   = parseInt(255 * red);
+                    temp_g   = parseInt(255 * green);
+                    temp_b   = parseInt(255 * blue);
                     temp_a   = parseInt(255 * temp);
                 }
-                y[offset] = y[offset + 1] = y[offset + 2] = temp_rgb;
+                y[offset]     = temp_r;
+                y[offset + 1] = temp_g;
+                y[offset + 2] = temp_b;
                 y[offset + 3] = temp_a;
             }
         }

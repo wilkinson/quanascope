@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!--
     index.html ~~
-                                                        ~~ (c) SRW, 27 Oct 2011
+                                                        ~~ (c) SRW, 02 Dec 2011
 -->
-<html lang="en" manifest="cache.appcache">
+<html lang="en">
   <head>
     <meta charset="utf-8"/>
     <meta name="author" content="Sean Wilkinson"/>
@@ -16,8 +16,7 @@
     <h1>Quanascope</h1>
     <canvas width="300" height="300" id="holder"></canvas>
     <br/>
-    <form>
-    <!-- <div style="display: inline-block; text-align: right;"> -->
+    <form id="control-panel">
       <input id="slider_r" type="range" value="50" min="0" max="100"/>
       <br/>
       <input id="slider_g" type="range" value="50" min="0" max="100"/>
@@ -26,8 +25,8 @@
       <br/>
       <input id="slider_a" type="range" value="50" min="0" max="100"/>
       <br/>
+      <input type="button" value="Reset" onClick="QSCOPE.reset();"/>
     </form>
-    <input type="button" value="Reset" onClick="QSCOPE.reset();"/>
     <div style="text-align: center;">
         Drag an image onto the canvas, then click on points of interest.
     </div>

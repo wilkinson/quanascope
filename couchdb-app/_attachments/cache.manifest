@@ -1,0 +1,25 @@
+CACHE MANIFEST
+
+#-  cache.manifest ~~
+#
+#   Unfortunately, it appears that CouchDB doesn't serve "*.appcache" files
+#   with the correct MIME type, so we're using this extension here instead.
+#
+#   Also, I have yet to find an extension for which Google Code will correctly
+#   serve the required "text/cache-manifest" MIME type. The "html5rocks.com"
+#   site uses "*.appcache" and has a Google copyright ... who knows?
+#
+#                                                       ~~ (c) SRW, 02 Dec 2011
+
+CACHE:
+favicon.ico
+index.html
+main.js
+style.css
+
+NETWORK:
+*
+
+#FALLBACK:
+
+# EOF
