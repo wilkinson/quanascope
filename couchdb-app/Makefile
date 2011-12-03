@@ -106,7 +106,7 @@ run: $(APPRC) $(APP)
             $(CP) couchapp.json $(APP)/                                 ;   \
             $(CP) rewrites.json $(APP)/                                 ;   \
             $(CP) validate_doc_update.js $(APP)/                        ;   \
-            echo "# $${RANDOM}" >> $(APP)/_attachments/cache.manifest   ;   \
+            echo "# $${RANDOM}" >> $(APP)/_attachments/cache.appcache   ;   \
             cd $(APP) && $(COUCHAPP) push -q                            ;   \
             if [ $$? -eq 0 ]; then                                          \
                 $(OPEN) $(URL)                                          ;   \
