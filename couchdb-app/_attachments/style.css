@@ -105,21 +105,26 @@ textarea {
     box-shadow: 0px 0px 10px gray;
 }
 
-#slider_r:before {
-    content: "R";
-}
-
-#slider_g:before {
-    content: "G";
+#slider_a:before {
+ /* This is the escape code for the "Greek small letter alpha" character. */
+    content: "\0003b1";
 }
 
 #slider_b:before {
     content: "B";
 }
 
-#slider_a:before {
- /* This is the escape code for the "Greek small letter alpha" character. */
-    content: "\0003b1"; 
+#slider_e:before {
+ /* This is the escape code for the "Greek small letter epsilon" character. */
+    content: "\0003b5";
+}
+
+#slider_g:before {
+    content: "G";
+}
+
+#slider_r:before {
+    content: "R";
 }
 
 /*  vim:set syntax=css:  */
